@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="MingmaYangeeSherpa_2329765.CSS">
+    <title>Weather App</title>
+</head>
+<body>
+    <div class="content">
+       
+        <div class="search">
+            <input type="text" id="search" class="search-bar" placeholder="Enter city name" spellcheck="false" name="search">
+            <button id="search-button">Search</button>
+            <button id="reload" onclick="location.reload()"><img src="re.png"></button>
+        </div>
+        
+        <div class="data loading">
+            <div class="weather-icon">
+           
+            </div>
+            <h1 class="temp"></h1>
+            <h2 class="city"></h2>
+            <h3 id="date"></h3>
+            
+            <div class="climate">
+              <div class="humidi">
+                  <img src="h.png" alt="Humidity icon">
+                  <p id="humidity">humidity</p>
+                  <!-- <p>Humidity</p> -->
+              </div>
+              <div class="winds">
+                  <img src="wi.png" alt="Wind icon">
+                  <p class="wind"></p>
+                  <!-- <p>Wind speed</p> -->
+              </div>
+            </div>
+        </div>
+    </div>
+    
+   <script src="MingmaYangeeSherpa_232976.js"></script> 
+   <script>
+      document.getElementById('search-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+        
+        var searchBox = document.getElementById('search');
+        var searchTerm = searchBox.value.trim();
+        
+        if (searchTerm !== '') {
+          // Perform AJAX request to fetch weather data using the searchTerm
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status === 200) {
+                // Update the weather data elements with the received data
+                var weatherData = JSON.parse(xhr.responseText);
+                updateWeatherData(weatherData);
+              } else {
+                // Handle error
+                console.error('Error:', xhr.status);
+              }
+            }
+          };
+          xhr.open('POST', 'Mingma_2329765.php', true);
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          xhr.send('search=' + encodeURIComponent(searchTerm));
+        }
+      });
+      
+      function updateWeatherData(data) {
+        // Update the weather data elements with the received data
+        var cityName = document.querySelector('.city');
+        var tempValue = document.querySelector('.temp');
+        var tempUnit = document.querySelector('.temp-unit');
+        var weatherIcon = document.querySelector('.weather-icon img');
+        var weatherCondition = document.querySelector('.weather-condition');
+        cityName.textContent = data.city;
+        tempValue.textContent = data.temperature;
+        tempUnit.textContent = '°C';
+        weatherIcon.src = data.weatherIcon;
+        weatherIcon.alt = 'Weather Icon';
+        weatherCondition.textContent = data.weatherCondition;
+      }
+    </script>
+</body>
+</html>
